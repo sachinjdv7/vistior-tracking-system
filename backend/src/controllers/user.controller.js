@@ -34,4 +34,17 @@ const createUser = async (req, res) => {
   }
 };
 
-export { createUser };
+const getAllUser = async (req, res) => {
+  try {
+    const user = await User.find({}, "-password");
+
+    res.status(200).json({
+      messsage: "Fetched all users",
+      users: user,
+    });
+  } catch (error) {
+    console.eror("Error while fetching all users", error);
+  }
+};
+
+export { createUser, getAllUser };
