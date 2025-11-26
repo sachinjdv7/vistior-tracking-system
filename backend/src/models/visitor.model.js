@@ -74,8 +74,8 @@ const visitorSchema = new mongoose.Schema(
 
     meetingStatus: {
       type: String,
-      enum: ["Pending", "Completed"],
-      default: "Pending",
+      enum: ["IN", "IN_MEETING", "OUT"],
+      default: "IN",
     },
 
     createdBy: {

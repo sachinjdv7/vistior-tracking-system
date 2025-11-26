@@ -18,8 +18,6 @@ const visitorIn = async (req, res) => {
       throw new ApiError(401, "Unauthorized request");
     }
 
-    console.log("req id in visitor in ", req.user.id);
-
     if (
       !visitorNumber ||
       !visitorName ||
@@ -36,12 +34,10 @@ const visitorIn = async (req, res) => {
     });
 
     if (existingVisitor) {
-      return res.status(409).json({
-        message: "Visitor already checked in",
-      });
+      throw new ApiError(409, "Visitor already checked in");
     }
 
-    const visitor = new Visitor({
+    const visitor = await Visitor.create({
       visitorNumber,
       visitorName,
       mobileNumber,
@@ -53,20 +49,16 @@ const visitorIn = async (req, res) => {
       createdBy: req.user.id,
     });
 
-    await visitor.save();
-
-    res
-      .status(201)
-      .json(
-        new ApiResponse(
-          201,
-          { visitorId: visitor._id },
-          "Visitor checked in successfully"
-        )
-      );
+    return res.status(201).json(
+      new ApiResponse(
+        201,
+        { visitorId: visitor._id },
+        "Visitor checked in successfully"
+      )
+    );
   } catch (error) {
     console.error("Error while tracking visitor in:", error);
-    res
+    return res
       .status(error?.statusCode || 500)
       .json(
         new ApiResponse(
@@ -101,6 +93,7 @@ const visitorOut = async (req, res) => {
 
     visitor.outTime = outTime;
     visitor.totalTimeSpent = totalTimeSpent;
+     visitor.status = "OUT"; 
     visitor.updatedBy = req.user.id;
 
     await visitor.save();
