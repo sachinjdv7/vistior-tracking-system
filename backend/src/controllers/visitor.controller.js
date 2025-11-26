@@ -170,4 +170,41 @@ const getAllVisitors = async (req, res) => {
   }
 };
 
-export { visitorIn, visitorOut, updateMeetingStatus, getAllVisitors };
+const getAllAssignedVisitors = async (req, res) => {
+  try {
+    if (!req.user) {
+      throw new ApiError(401, "Unauthorized request");
+    }
+
+    const assignedTo = req.user.username;
+
+    const visitors = await Visitor.find({
+      contactPerson: assignedTo,
+    });
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(200, { visitors }, "All visitors fetched successfully")
+      );
+  } catch (error) {
+    console.error("Error while fetching assigned visitors:", error);
+    res
+      .status(error?.statusCode || 500)
+      .json(
+        new ApiResponse(
+          error?.statusCode || 500,
+          null,
+          error?.message || "Server error"
+        )
+      );
+  }
+};
+
+export {
+  visitorIn,
+  visitorOut,
+  updateMeetingStatus,
+  getAllVisitors,
+  getAllAssignedVisitors,
+};

@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getAllAssignedVisitors,
   getAllVisitors,
   updateMeetingStatus,
   visitorIn,
@@ -35,6 +36,13 @@ visitorRouter.get(
   isUserLoggedIn,
   authrizeRoles("admin", "security"),
   getAllVisitors
+);
+
+visitorRouter.get(
+  "/assigned",
+  isUserLoggedIn,
+  authrizeRoles("manager", "hr"),
+  getAllAssignedVisitors
 );
 
 export { visitorRouter };
