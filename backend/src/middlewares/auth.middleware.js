@@ -37,7 +37,7 @@ const isUserLoggedIn = (req, res, next) => {
 //   }
 // };
 
-export const authrizeRoles = (...allowedRoles) => {
+ const authrizeRoles = (...allowedRoles) => {
   return (req, res, next) => {
     try {
       const { role } = req.user;
@@ -58,4 +58,4 @@ export const authrizeRoles = (...allowedRoles) => {
   };
 };
 
-export { isUserLoggedIn, isAdmin };
+export { isUserLoggedIn, authrizeRoles };

@@ -2,7 +2,6 @@ import express from "express";
 import { createUser, getAllUser } from "../controllers/user.controller.js";
 import {
   authrizeRoles,
-  isAdmin,
   isUserLoggedIn,
 } from "../middlewares/auth.middleware.js";
 
