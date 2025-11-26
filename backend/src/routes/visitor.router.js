@@ -20,7 +20,7 @@ visitorRouter.post(
   visitorIn
 );
 visitorRouter.patch(
-  "/check-out/:visitorId ",
+  "/check-out/:visitorId",
   isUserLoggedIn,
   authrizeRoles("security"),
   visitorOut
