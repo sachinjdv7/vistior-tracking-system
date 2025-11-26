@@ -1,27 +1,40 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 const isUserLoggedIn = (req, res, next) => {
-
+  try {
     const token = req.cookies?.token;
 
     if (!token) {
-        return res.status(401).json({ message: 'Unauthorized request' });
+      throw new ApiError(401, "Unauthorized request");
     }
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded; 
-        next();
-    } catch (error) {
-        return res.status(403).json({ message: "Unauthorized: Invalid token" });
-    }
-}
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    console.error("Auth middleware error:", error);
+    const status = error?.statusCode || 500;
+    return res
+      .status(status)
+      .json(new ApiResponse(status, null, error?.message || "Server error"));
+  }
+};
 
 const isAdmin = (req, res, next) => {
-    if (req.user.role !== 'admin') {
-        return res.status(403).json({ message: "Forbidden: Admins only" });
+  try {
+    if (req.user.role !== "admin") {
+      throw new ApiError(403, "Access denied: Admin role required");
     }
     next();
-}
+  } catch (error) {
+    console.error("Admin middleware error:", error);
+    const status = error?.statusCode || 500;
+    return res
+      .status(status)
+      .json(new ApiResponse(status, null, error?.message || "Server error"));
+  }
+};
 
 export { isUserLoggedIn, isAdmin };

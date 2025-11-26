@@ -1,22 +1,20 @@
 import bcrypt from "bcryptjs";
 import { User } from "../models/users.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   try {
     const { username, password, role } = req.body;
 
     if (!username || !password || !role) {
-      return res.status(400).json({
-        message: "username, password and role required",
-      });
+      throw new ApiError(400, "Username, password and role are required");
     }
 
     const existedUser = await User.findOne({ username });
 
     if (existedUser) {
-      return res.status(409).json({
-        message: "User already existed",
-      });
+      throw new ApiError(409, "User already exists");
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -25,25 +23,47 @@ const createUser = async (req, res) => {
 
     await newUser.save();
 
-    res.status(201).json({
-      message: "User created successfully",
-    });
+    res
+      .status(201)
+      .json(
+        new ApiResponse(
+          201,
+          { username: newUser.username },
+          "User created successfully"
+        )
+      );
   } catch (error) {
-    console.log("Error while creating user", error);
-    res.status(500).json({ error: "server error" });
+    console.error("Error while creating user:", error);
+    res
+      .status(error?.statusCode || 500)
+      .json(
+        new ApiResponse(
+          error?.statusCode || 500,
+          null,
+          error?.message || "Server error"
+        )
+      );
   }
 };
 
-const getAllUser = async (req, res) => {
+const getAllUser = async (req, res, next) => {
   try {
-    const user = await User.find({}, "-password");
+    const users = await User.find({}, "-password");
 
-    res.status(200).json({
-      messsage: "Fetched all users",
-      users: user,
-    });
+    res
+      .status(200)
+      .json(new ApiResponse(200, { users }, "All users fetched successfully"));
   } catch (error) {
-    console.eror("Error while fetching all users", error);
+    console.error("Error while fetching all users:", error);
+    res
+      .status(error?.statusCode || 500)
+      .json(
+        new ApiResponse(
+          error?.statusCode || 500,
+          null,
+          error?.message || "Server error"
+        )
+      );
   }
 };
 
