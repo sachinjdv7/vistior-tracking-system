@@ -22,19 +22,40 @@ const isUserLoggedIn = (req, res, next) => {
   }
 };
 
-const isAdmin = (req, res, next) => {
-  try {
-    if (req.user.role !== "admin") {
-      throw new ApiError(403, "Access denied: Admin role required");
+// const isAdmin = (req, res, next) => {
+//   try {
+//     if (req.user.role !== "admin") {
+//       throw new ApiError(403, "Access denied: Admin role required");
+//     }
+//     next();
+//   } catch (error) {
+//     console.error("Admin middleware error:", error);
+//     const status = error?.statusCode || 500;
+//     return res
+//       .status(status)
+//       .json(new ApiResponse(status, null, error?.message || "Server error"));
+//   }
+// };
+
+export const authrizeRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    try {
+      const { role } = req.user;
+      if (!allowedRoles.includes(role)) {
+        throw new ApiError(
+          403,
+          "Access denied: you don't have permission to access this resource"
+        );
+      }
+      next();
+    } catch (error) {
+      console.error("authrizeRoles middleware error:", error);
+      const status = error?.statusCode || 500;
+      return res
+        .status(status)
+        .json(new ApiResponse(status, null, error?.message || "Server error"));
     }
-    next();
-  } catch (error) {
-    console.error("Admin middleware error:", error);
-    const status = error?.statusCode || 500;
-    return res
-      .status(status)
-      .json(new ApiResponse(status, null, error?.message || "Server error"));
-  }
+  };
 };
 
 export { isUserLoggedIn, isAdmin };
