@@ -1,14 +1,26 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router";
+import apiClient from "../api/apiClient";
+import { removeUser } from "../store/userSlice";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
-  console.log(user);
+  const dispatch = useDispatch();
+  const handleLogout = async () => {
+    try {
+      await apiClient.post("/auth/logout", {});
+      dispatch(removeUser());
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">
+        <Link to="/" className="btn btn-ghost text-xl">
           {user ? "Dashboard" : "Visitor Tracking System"}
-        </a>
+        </Link>
       </div>
       {user && <span>welcome, {user?.username}</span>}
       {user && (
@@ -31,7 +43,9 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               <li>
-                <a>Logout</a>
+                <Link onClick={handleLogout} to="/login">
+                  Logout
+                </Link>
               </li>
             </ul>
           </div>
