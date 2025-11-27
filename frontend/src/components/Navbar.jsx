@@ -6,7 +6,9 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">Dashboard</a>
+        <a className="btn btn-ghost text-xl">
+          {user ? "Dashboard" : "Visitor Tracking System"}
+        </a>
       </div>
       {user && <span>welcome, {user?.username}</span>}
       {user && (

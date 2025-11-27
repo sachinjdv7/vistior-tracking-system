@@ -2,11 +2,12 @@ import { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/userSlice";
-
+import { useNavigate } from "react-router";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleLogin = async () => {
     try {
       const res = await axios.post(
@@ -20,7 +21,7 @@ const Login = () => {
         }
       );
       dispatch(addUser(res.data.data.user));
-      console.log("Login successful:", res.data.data.user);
+      navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -28,9 +29,6 @@ const Login = () => {
 
   return (
     <>
-      <h1 className="text-3xl md:text-4xl font-bold mb-8 text-gray-800">
-        Login
-      </h1>
       <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-sm border p-6 shadow-lg">
         <label className="label">Username</label>
         <input
