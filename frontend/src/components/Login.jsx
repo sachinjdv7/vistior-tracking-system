@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import apiClient from "../api/apiClient";
 import { addUser } from "../store/userSlice";
+import { toast } from "react-toastify";
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,9 +17,11 @@ const Login = () => {
         password,
       });
       dispatch(addUser(res.data.data.user));
+      toast.success("Login successful!");
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
+      toast.error(error?.response?.data?.message || "Login Failed");
     }
   };
 
@@ -39,7 +43,6 @@ const Login = () => {
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
         />
-
         <button onClick={handleLogin} className="btn btn-neutral mt-6 w-full">
           Login
         </button>

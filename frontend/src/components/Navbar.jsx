@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
+import { toast } from "react-toastify";
 import apiClient from "../api/apiClient";
 import { removeUser } from "../store/userSlice";
 
@@ -10,8 +11,10 @@ const Navbar = () => {
     try {
       await apiClient.post("/auth/logout", {});
       dispatch(removeUser());
+      toast.success("Logged out successfully!");
     } catch (error) {
       console.error("Logout failed:", error);
+      toast.error("Logout failed. Please try again.");
     }
   };
 
