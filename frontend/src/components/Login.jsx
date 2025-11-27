@@ -26,7 +26,8 @@ const Login = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center mt-4 bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-200 px-4">
+      <h1 className="font-bold">Welcome Back !!!</h1>
       <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-sm border p-6 shadow-lg">
         <label className="label">Username</label>
         <input
@@ -47,7 +48,7 @@ const Login = () => {
           Login
         </button>
       </fieldset>
-    </>
+    </div>
   );
 };
 
