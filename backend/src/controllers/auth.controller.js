@@ -40,13 +40,7 @@ const login = async (req, res, next) => {
 
     res
       .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          { user: user.name, token },
-          "User login successfully"
-        )
-      );
+      .json(new ApiResponse(200, { user, token }, "User login successfully"));
   } catch (error) {
     console.error("Error during login:", error);
     res
