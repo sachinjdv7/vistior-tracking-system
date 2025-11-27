@@ -23,7 +23,7 @@ const UserList = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-6xl mx-auto mt-1">
+    <div className="w-full max-w-4xl mx-auto mt-1">
       <div className="flex items-center justify-between mb-1">
         <h2 className="text-xl font-bold">User List</h2>
 
