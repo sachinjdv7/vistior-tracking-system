@@ -7,6 +7,7 @@ import Dashboard from "./components/Dashboard.jsx";
 import Login from "./components/Login.jsx";
 import "./index.css";
 import appStore from "./store/appStore.js";
+import UserList from "./components/UserList.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -14,6 +15,7 @@ createRoot(document.getElementById("root")).render(
       <BrowserRouter basename="/">
         <Routes>
           <Route path="/" element={<App />}>
+            <Route index element={<UserList />} />
             <Route path="login" element={<Login />} />
             <Route path="dashboard" element={<Dashboard />} />
           </Route>
