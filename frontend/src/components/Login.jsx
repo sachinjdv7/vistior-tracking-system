@@ -1,8 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
-import { addUser } from "../store/userSlice";
 import { useNavigate } from "react-router";
+import apiClient from "../api/apiClient";
+import { addUser } from "../store/userSlice";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -10,16 +10,10 @@ const Login = () => {
   const navigate = useNavigate();
   const handleLogin = async () => {
     try {
-      const res = await axios.post(
-        "http://localhost:8082/api/v1/auth/login",
-        {
-          username,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await apiClient.post("/auth/login", {
+        username,
+        password,
+      });
       dispatch(addUser(res.data.data.user));
       navigate("/");
     } catch (error) {
