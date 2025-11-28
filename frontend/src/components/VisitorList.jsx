@@ -119,6 +119,7 @@ const VisitorList = () => {
 
                   <td>
                     <button
+                      onClick={() => handleVisitorOut(visitor._id)}
                       disabled={!!visitor.outTime}
                       className={`px-3 py-1 rounded 
     ${visitor.outTime ? "bg-gray-400" : "bg-red-500 text-white"}

@@ -18,6 +18,19 @@ const AssignedVisitors = () => {
     }
   };
 
+  const updateVisitorStatus = async (visitorId) => {
+    console.log("Updating status for visitor ID:", visitorId);
+    try {
+      console.log("Sending PATCH request to update status");
+      await apiClient.patch(`/visitor/meeting-status/${visitorId}`);
+      getAllAssignedVisitors();
+      toast.success("Visitor status updated successfully");
+    } catch (error) {
+      console.error("Error updating visitor status:", error);
+      toast.error("Failed to update visitor status");
+    }
+  };
+
   useEffect(() => {
     getAllAssignedVisitors();
   }, []);
@@ -91,7 +104,12 @@ const AssignedVisitors = () => {
                   </td>
 
                   <td>
-                    <button className="btn btn-sm btn-warning">meeting</button>
+                    <button
+                      onClick={() => updateVisitorStatus(visitor._id)}
+                      className="btn btn-sm btn-warning"
+                    >
+                      meeting
+                    </button>
                   </td>
                 </tr>
               ))}

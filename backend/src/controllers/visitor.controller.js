@@ -96,8 +96,8 @@ const visitorOut = async (req, res) => {
 
     visitor.outTime = outTime;
     visitor.totalTimeSpent = totalTimeSpent;
-    visitor.status = "OUT";
-    visitor.updatedBy = req.user.id;
+    visitor.meetingStatus = "OUT";
+    visitor.updatedBy = req?.user?.id;
 
     await visitor.save();
 
@@ -120,8 +120,6 @@ const visitorOut = async (req, res) => {
 
 const updateMeetingStatus = async (req, res) => {
   try {
-    const { status } = req.body;
-
     const { visitorId } = req.params;
 
     const visitor = await Visitor.findById(visitorId);
@@ -130,10 +128,15 @@ const updateMeetingStatus = async (req, res) => {
       throw new ApiError(404, "visitor not found");
     }
 
-    visitor.meetingStatus = status;
+    visitor.meetingStatus = "IN_MEETING";
     visitor.updatedBy = req.user.id;
 
     await visitor.save();
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, visitor, "Meeting status updated to IN_MEETING")
+      );
   } catch (error) {
     console.error("Error while updating meeting error:", error);
     res
