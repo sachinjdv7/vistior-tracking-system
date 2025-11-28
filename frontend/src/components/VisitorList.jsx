@@ -23,6 +23,19 @@ const VisitorList = () => {
     }
   };
 
+  const handleVisitorOut = async (visitorId) => {
+    try {
+      await apiClient.patch(`/visitor/check-out/${visitorId}`);
+      toast.success("Visitor checked out successfully!");
+      getVisitorList();
+    } catch (error) {
+      console.error("Error checking out visitor:", error);
+      toast.error(
+        error?.response?.data?.message || "Failed to check out visitor"
+      );
+    }
+  };
+
   useEffect(() => {
     getVisitorList();
   }, []);
@@ -36,7 +49,7 @@ const VisitorList = () => {
             onClick={() => navigate("/visitor/new")}
             className="btn btn-sm btn-primary"
           >
-            + Create User
+            + Create Visitor
           </button>
         )}
       </div>
@@ -56,6 +69,8 @@ const VisitorList = () => {
                 <th>Status</th>
                 <th>In Time</th>
                 <th>Out Time</th>
+                <th>Total Time (min)</th>
+                <th>Action</th>
               </tr>
             </thead>
 
@@ -75,6 +90,8 @@ const VisitorList = () => {
                       className={`badge badge-sm ${
                         visitor.meetingStatus === "IN"
                           ? "badge-success"
+                          : visitor.meetingStatus === "IN_MEETING"
+                          ? "badge-warning"
                           : "badge-error"
                       }`}
                     >
@@ -93,12 +110,29 @@ const VisitorList = () => {
                       ? new Date(visitor.outTime).toLocaleString()
                       : "-"}
                   </td>
+
+                  <td>
+                    {visitor.totalTimeSpent
+                      ? `${visitor.totalTimeSpent} min`
+                      : "-"}
+                  </td>
+
+                  <td>
+                    <button
+                      disabled={!!visitor.outTime}
+                      className={`px-3 py-1 rounded 
+    ${visitor.outTime ? "bg-gray-400" : "bg-red-500 text-white"}
+  `}
+                    >
+                      OUT
+                    </button>
+                  </td>
                 </tr>
               ))}
 
               {visitorList?.length === 0 && (
                 <tr>
-                  <td colSpan="10" className="text-center py-3 opacity-70">
+                  <td colSpan="12" className="text-center py-3 opacity-70">
                     No visitors found
                   </td>
                 </tr>
