@@ -3,9 +3,11 @@ import { toast } from "react-toastify";
 import apiClient from "../api/apiClient";
 import { useDispatch, useSelector } from "react-redux";
 import { addUserList } from "../store/userListSlice";
+import { useNavigate } from "react-router";
 
 const UserList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userList = useSelector((store) => store.userlist);
   const user = useSelector((store) => store.user);
 
@@ -32,7 +34,12 @@ const UserList = () => {
     <div className="w-full max-w-4xl mx-auto mt-1">
       <div className="flex items-center justify-between mb-1">
         <h2 className="text-xl font-bold">User List</h2>
-        <button className="btn btn-sm btn-primary">+ Create User</button>
+        <button
+          onClick={() => navigate("/create/new")}
+          className="btn btn-sm btn-primary"
+        >
+          + Create User
+        </button>
       </div>
 
       <div className="bg-base-100 shadow rounded-md">

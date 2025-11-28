@@ -6,7 +6,7 @@ import { useState } from "react";
 const User = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("admin");
   const navigate = useNavigate();
 
   const hanldeCreateUser = async () => {
