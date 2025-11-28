@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import apiClient from "../api/apiClient";
 import { addUser } from "../store/userSlice";
@@ -10,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((store) => store.user);
   const handleLogin = async () => {
     try {
       const res = await apiClient.post("/auth/login", {
@@ -18,7 +19,14 @@ const Login = () => {
       });
       dispatch(addUser(res.data.data.user));
       toast.success("Login successful!");
-      navigate("/");
+      const roleRouteMap = {
+        admin: "/",
+        security: "/visitor/list",
+        manager: "/visitor/assign",
+        hr: "/visitor/assign",
+      };
+
+      navigate(roleRouteMap[res?.data?.data?.user?.role]);
     } catch (error) {
       console.error("Login failed:", error);
       toast.error(error?.response?.data?.message || "Login Failed");

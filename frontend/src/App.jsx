@@ -1,18 +1,16 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useNavigate, useLocation } from "react-router";
+import { useDispatch } from "react-redux";
+import { Outlet, useNavigate } from "react-router";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import apiClient from "./api/apiClient";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import { addUser } from "./store/userSlice";
-import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
-  const user = useSelector((store) => store.user);
 
   const getCurrentUser = async () => {
     try {
@@ -26,24 +24,6 @@ const App = () => {
   useEffect(() => {
     getCurrentUser();
   }, []);
-
-  useEffect(() => {
-    if (!user) return;
-
-    if (user.role === "security" && location.pathname === "/") {
-      navigate("/visitor/list", { replace: true });
-    }
-
-    if (user.role === "admin" && location.pathname === "/login") {
-      navigate("/", { replace: true });
-    }
-    if (
-      user.role === "manager" ||
-      (user.role === "hr" && location.pathname === "/login")
-    ) {
-      navigate("/visitor/assign", { replace: true });
-    }
-  }, [user, location.pathname, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-200">

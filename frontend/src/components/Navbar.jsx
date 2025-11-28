@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import apiClient from "../api/apiClient";
 import { removeUser } from "../store/userSlice";
@@ -7,10 +7,12 @@ import { removeUser } from "../store/userSlice";
 const Navbar = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       await apiClient.post("/auth/logout", {});
       dispatch(removeUser());
+      navigate("/login");
       toast.success("Logged out successfully!");
     } catch (error) {
       console.error("Logout failed:", error);
