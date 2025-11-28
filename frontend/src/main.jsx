@@ -10,6 +10,7 @@ import VisitorForm from "./components/VisitorForm.jsx";
 import VisitorList from "./components/VisitorList.jsx";
 import "./index.css";
 import appStore from "./store/appStore.js";
+import AssignedVisitors from "./components/AssignedVisitors.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -19,6 +20,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/" element={<App />}>
             <Route index element={<UserList />} />
             <Route path="visitor/list" element={<VisitorList />} />
+            <Route path="visitor/assign" element={<AssignedVisitors />} />
             <Route path="visitor/new" element={<VisitorForm />} />
             <Route path="create/new" element={<User />} />
             <Route path="login" element={<Login />} />
