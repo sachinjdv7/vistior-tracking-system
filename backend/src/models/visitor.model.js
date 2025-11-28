@@ -52,8 +52,6 @@ const visitorSchema = new mongoose.Schema(
     vehicleNumber: {
       type: String,
       trim: true,
-      uppercase: true,
-      match: [/^[A-Z]{2}\d{2}[A-Z]{2}\d{4}$/, "Invalid vehicle number"],
     },
 
     inTime: { type: Date, default: Date.now },

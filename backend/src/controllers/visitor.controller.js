@@ -43,7 +43,7 @@ const visitorIn = async (req, res) => {
       mobileNumber,
       contactPerson,
       purpose,
-      numberOfPersons,
+      numberOfPersons: Number(numberOfPersons),
       vehicleNumber,
       inTime: new Date(),
       createdBy: req.user.id,
