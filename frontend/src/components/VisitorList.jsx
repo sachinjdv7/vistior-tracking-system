@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import apiClient from "../api/apiClient";
 import { addVisitorList } from "../store/visitorSlice";
+import { useNavigate } from "react-router";
 
 const VisitorList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const visitorList = useSelector((store) => store.visitor);
   const user = useSelector((store) => store.user);
 
@@ -31,7 +33,7 @@ const VisitorList = () => {
         <h2 className="text-xl font-bold">Visitor List</h2>
         {user?.role === "security" && (
           <button
-            //   onClick={() => navigate("/create/new")}
+            onClick={() => navigate("/visitor/new")}
             className="btn btn-sm btn-primary"
           >
             + Create User
