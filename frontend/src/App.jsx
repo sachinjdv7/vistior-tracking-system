@@ -37,6 +37,12 @@ const App = () => {
     if (user.role === "admin" && location.pathname === "/login") {
       navigate("/", { replace: true });
     }
+    if (
+      user.role === "manager" ||
+      (user.role === "hr" && location.pathname === "/login")
+    ) {
+      navigate("/visitor/assign", { replace: true });
+    }
   }, [user, location.pathname, navigate]);
 
   return (
