@@ -48,7 +48,7 @@ const createUser = async (req, res, next) => {
 
 const getAllUser = async (req, res, next) => {
   try {
-    const users = await User.find({}, "-password");
+    const users = await User.find({}, "-password").sort({ createdAt: -1 });
 
     res
       .status(200)

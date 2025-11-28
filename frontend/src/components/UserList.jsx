@@ -7,26 +7,31 @@ import { addUserList } from "../store/userListSlice";
 const UserList = () => {
   const dispatch = useDispatch();
   const userList = useSelector((store) => store.userlist);
+  const user = useSelector((store) => store.user);
 
   const getAllUserList = async () => {
     try {
       const res = await apiClient.get("/user/list");
       dispatch(addUserList(res.data.data.users));
     } catch (error) {
-      console.error("Error fetching user list:", error);
-      toast.error(error?.response?.data?.message || "Failed get all users");
+      if (error.response?.status !== 403) {
+        toast.error(error?.response?.data?.message || "Failed to load users");
+      }
     }
   };
 
   useEffect(() => {
-    getAllUserList();
-  }, []);
+    if (user?.role === "admin") {
+      getAllUserList();
+    }
+  }, [user]);
+
+  if (user?.role !== "admin") return null;
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-1">
       <div className="flex items-center justify-between mb-1">
         <h2 className="text-xl font-bold">User List</h2>
-
         <button className="btn btn-sm btn-primary">+ Create User</button>
       </div>
 
