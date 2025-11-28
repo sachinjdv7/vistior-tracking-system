@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Outlet, useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useNavigate, useLocation } from "react-router";
 import "react-toastify/dist/ReactToastify.css";
 import apiClient from "./api/apiClient";
 import Footer from "./components/Footer";
@@ -11,22 +11,34 @@ import { ToastContainer } from "react-toastify";
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const user = useSelector((store) => store.user);
+
   const getCurrentUser = async () => {
     try {
-      const user = await apiClient.get("/auth/me");
-      console.log("Current user:", user.data.data.user);
-      dispatch(addUser(user.data.data.user));
+      const res = await apiClient.get("/auth/me");
+      dispatch(addUser(res.data.data.user));
     } catch (error) {
-      if (error.status === 401) {
-        navigate("/login");
-      }
-      console.error(error);
+      navigate("/login");
     }
   };
 
   useEffect(() => {
     getCurrentUser();
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (user.role === "security" && location.pathname === "/") {
+      navigate("/visitor/list", { replace: true });
+    }
+
+    if (user.role === "admin" && location.pathname === "/login") {
+      navigate("/", { replace: true });
+    }
+  }, [user, location.pathname, navigate]);
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-200">
       <Navbar />
