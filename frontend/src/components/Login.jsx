@@ -1,16 +1,15 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 import apiClient from "../api/apiClient";
 import { addUser } from "../store/userSlice";
-import { toast } from "react-toastify";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((store) => store.user);
   const handleLogin = async () => {
     try {
       const res = await apiClient.post("/auth/login", {
