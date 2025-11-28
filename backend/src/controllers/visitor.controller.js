@@ -1,3 +1,4 @@
+import { User } from "../models/users.model.js";
 import { Visitor } from "../models/visitor.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -176,10 +177,16 @@ const getAllAssignedVisitors = async (req, res) => {
       throw new ApiError(401, "Unauthorized request");
     }
 
-    const assignedTo = req.user.username;
+    const { id } = req.user;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
 
     const visitors = await Visitor.find({
-      contactPerson: assignedTo,
+      contactPerson: user.username,
     });
 
     res

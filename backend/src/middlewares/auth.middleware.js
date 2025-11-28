@@ -22,22 +22,7 @@ const isUserLoggedIn = (req, res, next) => {
   }
 };
 
-// const isAdmin = (req, res, next) => {
-//   try {
-//     if (req.user.role !== "admin") {
-//       throw new ApiError(403, "Access denied: Admin role required");
-//     }
-//     next();
-//   } catch (error) {
-//     console.error("Admin middleware error:", error);
-//     const status = error?.statusCode || 500;
-//     return res
-//       .status(status)
-//       .json(new ApiResponse(status, null, error?.message || "Server error"));
-//   }
-// };
-
- const authrizeRoles = (...allowedRoles) => {
+const authrizeRoles = (...allowedRoles) => {
   return (req, res, next) => {
     try {
       const { role } = req.user;
