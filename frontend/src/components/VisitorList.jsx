@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import apiClient from "../api/apiClient";
 import { addVisitorList } from "../store/visitorSlice";
-import { useNavigate } from "react-router";
 import { formatTo12Hour, formatTotalTime } from "../utils/formateDate";
+import StatusBadge from "./StatusBadge";
 
 const VisitorList = () => {
   const dispatch = useDispatch();
@@ -87,17 +88,7 @@ const VisitorList = () => {
                   <td>{visitor.vehicleNumber || "-"}</td>
 
                   <td>
-                    <span
-                      className={`badge badge-sm ${
-                        visitor.meetingStatus === "IN"
-                          ? "badge-success"
-                          : visitor.meetingStatus === "IN_MEETING"
-                          ? "badge-warning"
-                          : "badge-error"
-                      }`}
-                    >
-                      {visitor.meetingStatus}
-                    </span>
+                    <StatusBadge status={visitor.meetingStatus} />
                   </td>
 
                   <td>{formatTo12Hour(visitor.inTime)}</td>

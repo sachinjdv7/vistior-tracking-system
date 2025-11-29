@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import apiClient from "../api/apiClient";
 import { addUser } from "../store/userSlice";
+import { ROLE_ROUTE_MAP } from "../constants/constants";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -18,14 +19,7 @@ const Login = () => {
       });
       dispatch(addUser(res.data.data.user));
       toast.success("Login successful!");
-      const roleRouteMap = {
-        admin: "/",
-        security: "/visitor/list",
-        manager: "/visitor/assign",
-        hr: "/visitor/assign",
-      };
-
-      navigate(roleRouteMap[res?.data?.data?.user?.role]);
+      navigate(ROLE_ROUTE_MAP[res?.data?.data?.user?.role]);
     } catch (error) {
       console.error("Login failed:", error);
       toast.error(error?.response?.data?.message || "Login Failed");

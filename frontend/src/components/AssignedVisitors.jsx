@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import apiClient from "../api/apiClient";
 import { addAssignedVisitors } from "../store/visitorSlice";
 import { formatTo12Hour, formatTotalTime } from "../utils/formateDate";
+import StatusBadge from "./StatusBadge";
 
 const AssignedVisitors = () => {
   const dispatch = useDispatch();
@@ -73,25 +74,11 @@ const AssignedVisitors = () => {
                   <td>{visitor.numberOfPersons}</td>
                   <td>{visitor.vehicleNumber || "-"}</td>
                   <td>
-                    <span
-                      className={`badge badge-sm ${
-                        visitor.meetingStatus === "IN_MEETING"
-                          ? "badge-warning"
-                          : visitor.outTime
-                          ? "badge-error"
-                          : "badge-success"
-                      }`}
-                    >
-                      {visitor.meetingStatus}
-                    </span>
+                    <StatusBadge status={visitor.meetingStatus} />
                   </td>
-
                   <td>{formatTo12Hour(visitor.inTime)}</td>
-
                   <td>{formatTo12Hour(visitor.outTime)}</td>
-
                   <td>{formatTotalTime(visitor.totalTimeSpent)}</td>
-
                   <td>
                     <button
                       onClick={() => updateVisitorStatus(visitor._id)}
