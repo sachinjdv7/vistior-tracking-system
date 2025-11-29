@@ -64,10 +64,7 @@ const visitorSchema = new mongoose.Schema(
 
     photoUrl: {
       type: String,
-      validate: {
-        validator: validator.isURL,
-        message: "Invalid photo URL",
-      },
+      required: true,
     },
 
     meetingStatus: {

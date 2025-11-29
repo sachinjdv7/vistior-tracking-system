@@ -10,6 +10,7 @@ import {
   authrizeRoles,
   isUserLoggedIn,
 } from "../middlewares/auth.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const visitorRouter = express.Router();
 
@@ -17,6 +18,7 @@ visitorRouter.post(
   "/check-in",
   isUserLoggedIn,
   authrizeRoles("security"),
+  upload.single("avatar"),
   visitorIn
 );
 visitorRouter.patch(

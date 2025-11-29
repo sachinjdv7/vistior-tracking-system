@@ -19,6 +19,10 @@ const visitorIn = async (req, res) => {
       throw new ApiError(401, "Unauthorized request");
     }
 
+    if (!req.file) {
+      throw new ApiError(400, "Avatar file is required");
+    }
+
     if (
       !visitorNumber ||
       !visitorName ||
@@ -38,7 +42,10 @@ const visitorIn = async (req, res) => {
       throw new ApiError(409, "Visitor already checked in");
     }
 
+    const photoUrl = `/uploads/${req.file.filename}`;
+
     const visitor = await Visitor.create({
+      photoUrl,
       visitorNumber,
       visitorName,
       mobileNumber,

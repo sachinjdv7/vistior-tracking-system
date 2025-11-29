@@ -11,21 +11,40 @@ const VisitorForm = () => {
   const [purpose, setPurpose] = useState("");
   const [numberOfPersons, setNumberOfPersons] = useState(1);
   const [vehicleNumber, setVehicleNumber] = useState("");
-
+  const [photo, setPhoto] = useState(null);
+  const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
+
+  const handlePhotoChange = (e) => {
+    console.log("files image", e.target.files);
+    const file = e.target.files[0];
+    setPhoto(file);
+    setPreview(URL.createObjectURL(file));
+  };
 
   const handleCreateVisitor = async () => {
     try {
-      const payload = {
-        visitorNumber,
-        visitorName,
-        mobileNumber,
-        contactPerson,
-        purpose,
-        numberOfPersons,
-        vehicleNumber,
-      };
-      await apiClient.post("visitor/check-in", payload);
+      if (!photo) {
+        toast.error("Please upload a photo of the visitor");
+        return;
+      }
+
+      const formData = new FormData();
+
+      formData.append("avatar", photo);
+      formData.append("visitorNumber", visitorNumber);
+      formData.append("visitorName", visitorName);
+      formData.append("mobileNumber", mobileNumber);
+      formData.append("contactPerson", contactPerson);
+      formData.append("purpose", purpose);
+      formData.append("numberOfPersons", numberOfPersons);
+      formData.append("vehicleNumber", vehicleNumber);
+
+      await apiClient.post("visitor/check-in", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       toast.success("Visitor Created Successfully!");
       navigate("/visitor/list");
     } catch (error) {
@@ -38,6 +57,18 @@ const VisitorForm = () => {
       <h1 className="font-bold text-xl mb-2">Create Visitor</h1>
 
       <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-sm border p-6 shadow-lg">
+        {preview && (
+          <div className="avatar flex justify-center mb-4">
+            <div className="w-24 rounded">
+              <img src={preview} alt="visitor photo" />
+            </div>
+          </div>
+        )}
+        <input
+          type="file"
+          className="file-input file-input-success"
+          onChange={handlePhotoChange}
+        />
         <label className="label">Visitor Number</label>
         <input
           type="text"
