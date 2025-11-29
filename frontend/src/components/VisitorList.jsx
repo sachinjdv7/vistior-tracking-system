@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import apiClient from "../api/apiClient";
 import { addVisitorList } from "../store/visitorSlice";
 import { useNavigate } from "react-router";
+import { formatTo12Hour, formatTotalTime } from "../utils/formateDate";
 
 const VisitorList = () => {
   const dispatch = useDispatch();
@@ -70,7 +71,7 @@ const VisitorList = () => {
                 <th>In Time</th>
                 <th>Out Time</th>
                 <th>Total Time (min)</th>
-                <th>Action</th>
+                {user?.role !== "admin" && <th>Action</th>}
               </tr>
             </thead>
 
@@ -99,35 +100,25 @@ const VisitorList = () => {
                     </span>
                   </td>
 
-                  <td>
-                    {visitor.inTime
-                      ? new Date(visitor.inTime).toLocaleString()
-                      : "-"}
-                  </td>
+                  <td>{formatTo12Hour(visitor.inTime)}</td>
 
-                  <td>
-                    {visitor.outTime
-                      ? new Date(visitor.outTime).toLocaleString()
-                      : "-"}
-                  </td>
+                  <td>{formatTo12Hour(visitor.outTime)}</td>
 
-                  <td>
-                    {visitor.totalTimeSpent
-                      ? `${visitor.totalTimeSpent} min`
-                      : "-"}
-                  </td>
+                  <td>{formatTotalTime(visitor.totalTimeSpent)}</td>
 
-                  <td>
-                    <button
-                      onClick={() => handleVisitorOut(visitor._id)}
-                      disabled={!!visitor.outTime}
-                      className={`px-3 py-1 rounded 
+                  {user?.role !== "admin" && (
+                    <td>
+                      <button
+                        onClick={() => handleVisitorOut(visitor._id)}
+                        disabled={!!visitor.outTime}
+                        className={`px-3 py-1 rounded 
     ${visitor.outTime ? "bg-gray-400" : "bg-red-500 text-white"}
   `}
-                    >
-                      OUT
-                    </button>
-                  </td>
+                      >
+                        OUT
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
 

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import apiClient from "../api/apiClient";
 import { addAssignedVisitors } from "../store/visitorSlice";
+import { formatTo12Hour, formatTotalTime } from "../utils/formateDate";
 
 const AssignedVisitors = () => {
   const dispatch = useDispatch();
@@ -85,28 +86,20 @@ const AssignedVisitors = () => {
                     </span>
                   </td>
 
-                  <td>
-                    {visitor.inTime
-                      ? new Date(visitor.inTime).toLocaleString()
-                      : "-"}
-                  </td>
+                  <td>{formatTo12Hour(visitor.inTime)}</td>
 
-                  <td>
-                    {visitor.outTime
-                      ? new Date(visitor.outTime).toLocaleString()
-                      : "-"}
-                  </td>
+                  <td>{formatTo12Hour(visitor.outTime)}</td>
 
-                  <td>
-                    {visitor.totalTimeSpent !== undefined
-                      ? `${visitor.totalTimeSpent} min`
-                      : "-"}
-                  </td>
+                  <td>{formatTotalTime(visitor.totalTimeSpent)}</td>
 
                   <td>
                     <button
                       onClick={() => updateVisitorStatus(visitor._id)}
-                      className="btn btn-sm btn-warning"
+                      disabled={
+                        visitor.meetingStatus === "OUT" ||
+                        visitor.meetingStatus === "IN_MEETING"
+                      }
+                      className="btn btn-success text-white"
                     >
                       meeting
                     </button>

@@ -4,6 +4,7 @@ import apiClient from "../api/apiClient";
 import { useDispatch, useSelector } from "react-redux";
 import { addUserList } from "../store/userListSlice";
 import { useNavigate } from "react-router";
+import { formatTo12Hour } from "../utils/formateDate";
 
 const UserList = () => {
   const dispatch = useDispatch();
@@ -58,7 +59,7 @@ const UserList = () => {
                 <tr key={user._id}>
                   <td className="font-medium">{user.username}</td>
                   <td>{user.role}</td>
-                  <td>{new Date(user.createdAt).toLocaleString()}</td>
+                  <td>{formatTo12Hour(user.createdAt)}</td>
                 </tr>
               ))}
 
