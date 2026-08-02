@@ -1,7 +1,25 @@
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { UserPlus } from "lucide-react";
 import apiClient from "../api/apiClient";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const User = () => {
   const [username, setUsername] = useState("");
@@ -9,7 +27,7 @@ const User = () => {
   const [role, setRole] = useState("admin");
   const navigate = useNavigate();
 
-  const hanldeCreateUser = async () => {
+  const handleCreateUser = async () => {
     try {
       await apiClient.post("/user/create", { username, password, role });
       toast.success("User created successfully!");
@@ -21,42 +39,53 @@ const User = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center mt-4 bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-200 px-4">
-      <h1 className="font-bold">Create User!!!</h1>
-      <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-sm border p-6 shadow-lg">
-        <label className="label">Username</label>
-        <input
-          type="username"
-          className="input input-bordered w-full"
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <label className="label mt-2">Password</label>
-        <input
-          type="password"
-          className="input input-bordered w-full"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <label className="label mt-2">Role</label>
-        <select
-          className="select select-bordered w-full"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-        >
-          <option value="admin">Admin</option>
-          <option value="hr">HR</option>
-          <option value="manager">Manager</option>
-          <option value="security">Security</option>
-        </select>
-        <button
-          onClick={hanldeCreateUser}
-          className="btn btn-success text-amber-50 mt-6 w-full"
-        >
-          Create User
-        </button>
-      </fieldset>
+    <div className="flex flex-col items-center justify-center">
+      <Card className="w-full max-w-sm">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Create User</CardTitle>
+          <CardDescription>Add a new user to the system</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              type="text"
+              placeholder="Enter username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Role</Label>
+            <Select value={role} onValueChange={setRole}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="admin">Admin</SelectItem>
+                <SelectItem value="hr">HR</SelectItem>
+                <SelectItem value="manager">Manager</SelectItem>
+                <SelectItem value="security">Security</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button onClick={handleCreateUser} className="w-full" size="lg">
+            <UserPlus className="size-4" />
+            Create User
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };

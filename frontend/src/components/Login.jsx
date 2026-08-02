@@ -2,15 +2,27 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { LogIn } from "lucide-react";
 import apiClient from "../api/apiClient";
 import { addUser } from "../store/userSlice";
 import { ROLE_ROUTE_MAP } from "../constants/constants";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const handleLogin = async () => {
     try {
       const res = await apiClient.post("/auth/login", {
@@ -27,28 +39,39 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center mt-4 bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-200 px-4">
-      <h1 className="font-bold">Welcome Back !!!</h1>
-      <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-sm border p-6 shadow-lg">
-        <label className="label">Username</label>
-        <input
-          type="username"
-          className="input input-bordered w-full"
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <label className="label mt-2">Password</label>
-        <input
-          type="password"
-          className="input input-bordered w-full"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button onClick={handleLogin} className="btn btn-neutral mt-6 w-full">
-          Login
-        </button>
-      </fieldset>
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)]">
+      <Card className="w-full max-w-sm">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Welcome Back</CardTitle>
+          <CardDescription>Sign in to your account to continue</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <Button onClick={handleLogin} className="w-full" size="lg">
+            <LogIn className="size-4" />
+            Login
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };

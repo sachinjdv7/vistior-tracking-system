@@ -1,10 +1,28 @@
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import apiClient from "../api/apiClient";
 import { useDispatch, useSelector } from "react-redux";
-import { addUserList } from "../store/userListSlice";
 import { useNavigate } from "react-router";
+import { Plus } from "lucide-react";
+import apiClient from "../api/apiClient";
+import { addUserList } from "../store/userListSlice";
 import { formatTo12Hour } from "../utils/formateDate";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const UserList = () => {
   const dispatch = useDispatch();
@@ -32,48 +50,61 @@ const UserList = () => {
   if (user?.role !== "admin") return null;
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-1">
-      <div className="flex items-center justify-between mb-1">
-        <h2 className="text-xl font-bold">User List</h2>
-        <button
-          onClick={() => navigate("/create/new")}
-          className="btn btn-sm btn-primary"
-        >
-          + Create User
-        </button>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold tracking-tight">User List</h2>
+          <p className="text-sm text-muted-foreground">
+            Manage system users and roles
+          </p>
+        </div>
+        <Button size="sm" onClick={() => navigate("/create/new")}>
+          <Plus className="size-4" />
+          Create User
+        </Button>
       </div>
 
-      <div className="bg-base-100 shadow rounded-md">
-        <div className="overflow-x-auto">
-          <table className="table table-zebra">
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Role</th>
-                <th>Created At</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {userList?.map((user) => (
-                <tr key={user._id}>
-                  <td className="font-medium">{user.username}</td>
-                  <td>{user.role}</td>
-                  <td>{formatTo12Hour(user.createdAt)}</td>
-                </tr>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle>All Users</CardTitle>
+          <CardDescription>
+            {userList?.length || 0} user(s) registered
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Username</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Created At</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {userList?.map((u) => (
+                <TableRow key={u._id}>
+                  <TableCell className="font-medium">{u.username}</TableCell>
+                  <TableCell>
+                    <Badge variant="secondary">{u.role}</Badge>
+                  </TableCell>
+                  <TableCell>{formatTo12Hour(u.createdAt)}</TableCell>
+                </TableRow>
               ))}
 
               {userList?.length === 0 && (
-                <tr>
-                  <td colSpan="3" className="text-center py-3 opacity-70">
+                <TableRow>
+                  <TableCell
+                    colSpan={3}
+                    className="text-center py-8 text-muted-foreground"
+                  >
                     No users found
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 };
